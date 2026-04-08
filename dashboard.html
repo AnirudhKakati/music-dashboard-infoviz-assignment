@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Mood Shift — How Hit Music Changed (2000–2019)</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #FAFAFA;
+    color: #1a1a1a;
+    padding: 32px 40px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .dashboard-header {
+    margin-bottom: 36px;
+    border-bottom: 1px solid #E8E8E8;
+    padding-bottom: 20px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1a1a;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+
+  .dashboard-header p {
+    font-size: 14px;
+    color: #777;
+  }
+
+  /* KPI strip */
+  .kpi-strip {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 36px;
+  }
+
+  .kpi-card {
+    flex: 1;
+    background: white;
+    border-radius: 10px;
+    padding: 22px 26px;
+    border: 1px solid #EBEBEB;
+  }
+
+  .kpi-value {
+    font-size: 36px;
+    font-weight: 700;
+    color: #4C72B0;
+    letter-spacing: -1px;
+  }
+
+  .kpi-label {
+    font-size: 13px;
+    color: #777;
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+
+  /* Chart grid */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .chart-card {
+    background: white;
+    border-radius: 10px;
+    padding: 28px 28px 16px 28px;
+    border: 1px solid #EBEBEB;
+  }
+
+  .chart-card.full-width {
+    grid-column: 1 / -1;
+  }
+
+  .chart-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+
+  .chart-subtitle {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 16px;
+  }
+
+  .chart-container {
+    width: 100%;
+  }
+
+  /* Takeaway strip */
+  .takeaway-strip {
+    margin-top: 36px;
+    background: white;
+    border-radius: 10px;
+    padding: 24px 28px;
+    border: 1px solid #EBEBEB;
+  }
+
+  .takeaway-strip h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .takeaways {
+    display: flex;
+    gap: 32px;
+  }
+
+  .takeaway {
+    flex: 1;
+    font-size: 13px;
+    color: #555;
+    line-height: 1.6;
+    padding-left: 14px;
+    border-left: 3px solid #4C72B0;
+  }
+
+  .source-note {
+    text-align: left;
+    margin-top: 24px;
+    font-size: 11px;
+    color: #aaa;
+  }
+</style>
+</head>
+<body>
+
+<div class="dashboard-header">
+  <h1>The Mood Shift: How Hit Music Changed (1999–2019)</h1>
+  <p>An analysis of Spotify's top 2,000 tracks across two decades</p>
+</div>
+
+<!-- KPIs -->
+<div class="kpi-strip">
+  <div class="kpi-card">
+    <div class="kpi-value">86%</div>
+    <div class="kpi-label">of all top hits in 2019 are Pop or Hip Hop</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-value">56s</div>
+    <div class="kpi-label">shorter — the average hit song in 2019 vs. 1999</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-value">42%</div>
+    <div class="kpi-label">of top hits in 2019 contain explicit content</div>
+  </div>
+</div>
+
+<!-- Charts -->
+<div class="chart-grid">
+
+  <!-- Chart 1: Genre Trends -->
+  <div class="chart-card full-width">
+    <div class="chart-title">Hip hop has grown the most to become the second biggest genre in top hits.</div>
+    <div class="chart-subtitle">Share of top hits for the top 3 genres</div>
+    <div class="chart-container" id="chart-genre"></div>
+  </div>
+
+  <!-- Chart 2: Song Duration -->
+  <div class="chart-card">
+    <div class="chart-title">The average hit song is now 56 seconds shorter than in 1999.</div>
+    <div class="chart-subtitle">Average duration of top tracks in seconds</div>
+    <div class="chart-container" id="chart-duration"></div>
+  </div>
+
+  <!-- Chart 3: Explicit Content -->
+  <div class="chart-card">
+    <div class="chart-title">Nearly half of all top hits now contain explicit content.</div>
+    <div class="chart-subtitle">Percentage of top tracks with explicit lyrics each year</div>
+    <div class="chart-container" id="chart-explicit"></div>
+  </div>
+
+  <!-- Chart 4: Top Artists -->
+  <div class="chart-card full-width">
+    <div class="chart-title">Rihanna and Drake lead with the most appearances in top hits across two decades.</div>
+    <div class="chart-subtitle">Number of appearances in Spotify's top tracks (1999–2019)</div>
+    <div class="chart-container" id="chart-artists"></div>
+  </div>
+
+</div>
+
+<!-- Takeaways -->
+<div class="takeaway-strip">
+  <h3>Key Takeaways</h3>
+  <div class="takeaways">
+    <div class="takeaway">
+      <strong>Genre shift:</strong> Hip hop's share of top hits more than doubled from 18% in 1999 to 43% in 2019, while rock virtually disappeared from the charts.
+    </div>
+    <div class="takeaway">
+      <strong>Shorter & explicit:</strong> Songs shrank by 56 seconds on average, and explicit content nearly tripled — likely driven by hip hop's dominance and streaming-era incentives.
+    </div>
+    <div class="takeaway">
+      <strong>Star power:</strong> A small number of artists like Rihanna (25 hits) and Drake (23 hits) have consistently dominated, shaping the sound of two decades.
+    </div>
+  </div>
+</div>
+
+<div class="source-note">Source: Spotify Top 2000 Tracks (2000–2019) via Kaggle &nbsp;|&nbsp; Dashboard by Anirudh Kakati</div>
+
+<script>
+const BLUE = '#4C72B0';
+const GREY = '#D3D3D3';
+const MID = '#777777';
+const LIGHT_GRID = '#EBEBEB';
+
+const plotlyConfig = { displayModeBar: false, responsive: true };
+
+const baseLayout = {
+  font: { family: 'DM Sans, sans-serif', color: MID, size: 11 },
+  paper_bgcolor: 'rgba(0,0,0,0)',
+  plot_bgcolor: 'rgba(0,0,0,0)',
+  margin: { t: 10, b: 40, l: 50, r: 60 },
+  hovermode: 'x unified',
+  hoverlabel: {
+    bgcolor: 'white',
+    bordercolor: '#E8E8E8',
+    font: { family: 'DM Sans', size: 12, color: '#1a1a1a' }
+  },
+  xaxis: {
+    showgrid: false,
+    zeroline: false,
+    showline: false,
+    tickfont: { color: MID, size: 11 },
+    dtick: 5
+  },
+  yaxis: {
+    showgrid: true,
+    gridcolor: LIGHT_GRID,
+    gridwidth: 1,
+    zeroline: false,
+    showline: false,
+    tickfont: { color: MID, size: 11 }
+  }
+};
+
+// ─── CHART 1: Genre Trends ───
+const years = [1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019];
+
+const genreData = {
+  pop:     [60.5,52.7,54.6,35.6,45.4,39.6,30.8,47.4,37.2,48.5,44.0,41.1,35.4,53.0,60.7,62.5,53.5,50.5,51.4,39.3,48.3],
+  hiphop:  [18.4,28.4,29.6,51.1,34.0,44.8,49.0,28.4,42.6,36.1,40.5,50.5,48.5,38.3,30.3,28.8,33.3,39.4,37.8,46.7,42.7],
+  rock:    [15.8,8.1,11.1,10.0,13.4,5.2,15.4,12.6,17.0,11.3,9.5,0.9,10.1,5.2,4.5,1.9,9.1,4.0,5.4,5.6,0.0]
+};
+
+const genreTraces = [
+  {
+    x: years, y: genreData.pop, name: 'Pop',
+    line: { color: GREY, width: 2 }, mode: 'lines',
+    hovertemplate: 'Pop: %{y:.1f}%<extra></extra>'
+  },
+  {
+    x: years, y: genreData.hiphop, name: 'Hip Hop',
+    line: { color: BLUE, width: 3 }, mode: 'lines',
+    hovertemplate: 'Hip Hop: %{y:.1f}%<extra></extra>'
+  },
+  {
+    x: years, y: genreData.rock, name: 'Rock',
+    line: { color: GREY, width: 2 }, mode: 'lines',
+    hovertemplate: 'Rock: %{y:.1f}%<extra></extra>'
+  }
+];
+
+const genreLayout = {
+  ...baseLayout,
+  height: 320,
+  margin: { ...baseLayout.margin, r: 80 },
+  showlegend: false,
+  yaxis: { ...baseLayout.yaxis, ticksuffix: '%', range: [0, 70] },
+  xaxis: { ...baseLayout.xaxis, range: [1998.5, 2022.5], dtick: null, tickmode: 'array', tickvals: [2000, 2005, 2010, 2015, 2019] },
+  annotations: [
+    { x: 2019.4, y: 48.3, text: '<b>Pop</b>', showarrow: false, font: { color: MID, size: 11 }, xanchor: 'left' },
+    { x: 2019.4, y: 42.7, text: '<b>Hip Hop</b>', showarrow: false, font: { color: BLUE, size: 11 }, xanchor: 'left' },
+    { x: 2019.4, y: 0.0, text: '<b>Rock</b>', showarrow: false, font: { color: MID, size: 11 }, xanchor: 'left' }
+  ]
+};
+
+Plotly.newPlot('chart-genre', genreTraces, genreLayout, plotlyConfig);
+
+
+// ─── CHART 2: Song Duration ───
+const durYears = years;
+const durValues = [253.4,250.0,242.5,253.5,236.3,234.0,236.5,238.1,231.7,235.7,236.1,220.8,228.7,224.0,230.7,220.6,218.4,220.0,212.3,209.6,196.7];
+const durColors = durYears.map(y => y >= 2019 ? BLUE : GREY);
+
+const durTrace = {
+  x: durYears, y: durValues, type: 'bar',
+  marker: { color: durColors, cornerradius: 2 },
+  hovertemplate: '%{x}: %{y:.0f}s<extra></extra>',
+  width: 0.6
+};
+
+const durLayout = {
+  ...baseLayout,
+  height: 300,
+  showlegend: false,
+  xaxis: { ...baseLayout.xaxis, range: [1998.5, 2019.5], dtick: null, tickmode: 'array', tickvals: [2000, 2005, 2010, 2015, 2019] },
+  yaxis: { ...baseLayout.yaxis, range: [150, 270], ticksuffix: 's' },
+  shapes: [{
+    type: 'line', x0: 1998.5, x1: 2019.5, y0: 253, y1: 253,
+    line: { color: MID, width: 1, dash: 'dot' }
+  }],
+  annotations: [{
+    x: 2005.5, y: 257, text: '1999 avg: 253s',
+    showarrow: false, font: { color: MID, size: 10 }
+  },
+  {
+    x: 2019, y: 200, text: '<b>197s</b>',
+    showarrow: false, font: { color: BLUE, size: 11 }
+  }]
+};
+
+Plotly.newPlot('chart-duration', [durTrace], durLayout, plotlyConfig);
+
+
+// ─── CHART 3: Explicit Content (Area) ───
+const explValues = [21.1,16.2,21.3,33.3,23.7,37.5,27.9,27.4,23.4,23.7,27.4,21.5,25.3,16.5,22.5,19.2,29.3,32.3,33.3,47.7,41.6];
+
+const explTrace = {
+  x: years, y: explValues,
+  fill: 'tozeroy',
+  fillcolor: 'rgba(76, 114, 176, 0.12)',
+  line: { color: BLUE, width: 2.5 },
+  mode: 'lines',
+  hovertemplate: '%{x}: %{y:.1f}%<extra></extra>'
+};
+
+const explLayout = {
+  ...baseLayout,
+  height: 300,
+  showlegend: false,
+  yaxis: { ...baseLayout.yaxis, ticksuffix: '%', range: [0, 55] },
+  xaxis: { ...baseLayout.xaxis, range: [1998.5, 2019.5], dtick: null, tickmode: 'array', tickvals: [2000, 2005, 2010, 2015, 2019] },
+  annotations: [
+    // { x: 2000, y: 18.5, text: '<b>16%</b>', showarrow: false, font: { color: BLUE, size: 11 } },
+    { x: 2018, y: 51, text: '<b>48%</b>', showarrow: false, font: { color: BLUE, size: 11 } }
+  ]
+};
+
+Plotly.newPlot('chart-explicit', [explTrace], explLayout, plotlyConfig);
+
+
+// ─── CHART 4: Top Artists (Horizontal Bar) ───
+const artistNames = ['Katy Perry','Beyoncé','Chris Brown','Kanye West','David Guetta','Britney Spears','Calvin Harris','Eminem','Drake','Rihanna'];
+const artistCounts = [16,16,17,17,18,19,20,21,23,25];
+const artistColors = artistNames.map(n => (n === 'Rihanna' || n === 'Drake') ? BLUE : GREY);
+const artistFontColors = artistNames.map(n => (n === 'Rihanna' || n === 'Drake') ? BLUE : MID);
+
+const artistTrace = {
+  y: artistNames, x: artistCounts, type: 'bar', orientation: 'h',
+  marker: { color: artistColors, cornerradius: 2 },
+  text: artistCounts.map(String),
+  textposition: 'outside',
+  textfont: { color: artistFontColors, size: 11, family: 'DM Sans' },
+  hovertemplate: '%{y}: %{x} hits<extra></extra>',
+  width: 0.55
+};
+
+const artistLayout = {
+  ...baseLayout,
+  hovermode: 'closest',
+  height: 360,
+  margin: { t: 10, b: 20, l: 120, r: 50 },
+  showlegend: false,
+  xaxis: { ...baseLayout.xaxis, showticklabels: false, showgrid: false, range: [0, 29] },
+  yaxis: {
+    ...baseLayout.yaxis,
+    showgrid: false,
+    tickfont: { color: MID, size: 12 },
+    automargin: true
+  }
+};
+
+Plotly.newPlot('chart-artists', [artistTrace], artistLayout, plotlyConfig);
+
+// Bold the top 2 artist labels via DOM
+setTimeout(() => {
+  document.querySelectorAll('#chart-artists .ytick text').forEach(el => {
+    if (el.textContent === 'Rihanna' || el.textContent === 'Drake') {
+      el.style.fill = BLUE;
+      el.style.fontWeight = '700';
+    }
+  });
+}, 500);
+
+</script>
+</body>
+</html>
