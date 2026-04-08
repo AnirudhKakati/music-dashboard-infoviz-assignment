@@ -391,15 +391,19 @@ const artistLayout = {
 
 Plotly.newPlot('chart-artists', [artistTrace], artistLayout, plotlyConfig);
 
-// Bold the top 2 artist labels via DOM
-setTimeout(() => {
+// Bold & color the top 2 artist labels via DOM
+function styleTopArtists() {
   document.querySelectorAll('#chart-artists .ytick text').forEach(el => {
     if (el.textContent === 'Rihanna' || el.textContent === 'Drake') {
       el.style.fill = BLUE;
       el.style.fontWeight = '700';
     }
   });
-}, 500);
+}
+
+// Run after initial render and on every re-render (resize, etc.)
+document.getElementById('chart-artists').on('plotly_afterplot', styleTopArtists);
+setTimeout(styleTopArtists, 300);
 
 </script>
 </body>
